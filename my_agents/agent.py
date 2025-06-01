@@ -7,11 +7,7 @@ from stable_baselines3 import DQN
 from connectx import Game
 from mcts import MCTS
 from model import ResNet
-import logging
 
-
-logger = logging.getLogger(__name__)
-logging.basicConfig(filename='agent_log.log', encoding='utf-8', level=logging.DEBUG)
 
 class Agent:
     def __init__(self, agent, config: dict):
@@ -45,9 +41,8 @@ class AlphaConnect4:
     
     def __init__(self, game : Game, path, n_sims):
         self.device = torch.device('cpu')
-        self.model = torch.load(path, weights_only=False)
+        self.model = torch.load(path, weights_only=False, map_location=torch.device('cpu'))
         self.mcts = MCTS(model=self.model, game=game, n_loops=n_sims, device=self.device, c=2)
-        logger.debug("Initiated")
 
 
     def make_move(self, observation, configuration):
